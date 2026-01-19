@@ -17,6 +17,43 @@ from utils.improvement_suggester import generate_improvements
 import plotly.graph_objects as go
 import plotly.express as px
 from io import StringIO
+import nltk
+import ssl
+
+# Ensure NLTK data is available (for cloud deployments)
+def ensure_nltk_data():
+    """Download NLTK data if not available"""
+    try:
+        # Disable SSL verification for downloads (helps in some cloud environments)
+        try:
+            _create_unverified_https_context = ssl._create_unverified_context
+        except AttributeError:
+            pass
+        else:
+            ssl._create_default_https_context = _create_unverified_https_context
+
+        # Required NLTK packages
+        packages = ['punkt_tab', 'stopwords', 'wordnet']
+
+        for package in packages:
+            try:
+                if package == 'punkt_tab':
+                    nltk.data.find('tokenizers/punkt_tab')
+                elif package == 'stopwords':
+                    nltk.data.find('corpora/stopwords')
+                elif package == 'wordnet':
+                    nltk.data.find('corpora/wordnet')
+            except LookupError:
+                try:
+                    nltk.download(package, quiet=True)
+                except Exception as e:
+                    st.warning(f"Could not download NLTK {package}: {e}")
+                    continue
+    except Exception as e:
+        st.warning(f"NLTK setup failed: {e}")
+
+# Initialize NLTK data on app startup
+ensure_nltk_data()
 
 # Configure page
 st.set_page_config(

@@ -11,25 +11,24 @@ from nltk.stem import WordNetLemmatizer
 import string
 import streamlit as st
 
-# Download required NLTK data
-try:
-    nltk.data.find('tokenizers/punkt')
-except LookupError:
+# Download required NLTK data with better error handling
+nltk_packages = [
+    ('tokenizers/punkt', 'punkt'),
+    ('tokenizers/punkt_tab', 'punkt_tab'),
+    ('corpora/stopwords', 'stopwords'),
+    ('corpora/wordnet', 'wordnet')
+]
+
+for data_path, package_name in nltk_packages:
     try:
-        nltk.download('punkt')
-    except Exception:
-        # For newer NLTK versions
-        nltk.download('punkt_tab')
-
-try:
-    nltk.data.find('corpora/stopwords')
-except LookupError:
-    nltk.download('stopwords')
-
-try:
-    nltk.data.find('corpora/wordnet')
-except LookupError:
-    nltk.download('wordnet')
+        nltk.data.find(data_path)
+    except LookupError:
+        try:
+            print(f"Downloading NLTK package: {package_name}")
+            nltk.download(package_name, quiet=True)
+        except Exception as e:
+            print(f"Warning: Could not download {package_name}: {e}")
+            # Continue without failing - fallback tokenization will work
 
 # Predefined skill keywords (can be expanded)
 TECHNICAL_SKILLS = {

@@ -121,9 +121,11 @@ def generate_structure_suggestions(stats: dict, readability: dict) -> list:
         suggestions.append("Simplify language and technical jargon for better readability")
 
     # Check word variety
-    unique_words_ratio = stats.get('unique_words', 0) / stats.get('total_words', 1)
-    if unique_words_ratio < 0.3:
-        suggestions.append("Use more varied vocabulary to make your resume more engaging")
+    total_words = stats.get('total_words', 1)
+    if total_words > 0:
+        unique_words_ratio = stats.get('unique_words', 0) / total_words
+        if unique_words_ratio < 0.3:
+            suggestions.append("Use more varied vocabulary to make your resume more engaging")
 
     return suggestions
 
