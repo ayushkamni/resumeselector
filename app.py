@@ -24,6 +24,13 @@ import ssl
 def ensure_nltk_data():
     """Download NLTK data if not available"""
     try:
+        # Set NLTK data path to ensure it's downloaded to the right location
+        import os
+        nltk_data_dir = os.path.join(os.getcwd(), 'nltk_data')
+        if not os.path.exists(nltk_data_dir):
+            os.makedirs(nltk_data_dir)
+        nltk.data.path.insert(0, nltk_data_dir)
+
         # Disable SSL verification for downloads (helps in some cloud environments)
         try:
             _create_unverified_https_context = ssl._create_unverified_context
@@ -32,28 +39,33 @@ def ensure_nltk_data():
         else:
             ssl._create_default_https_context = _create_unverified_https_context
 
-        # Required NLTK packages
-        packages = ['punkt_tab', 'stopwords', 'wordnet']
+        # Required NLTK packages - try both old and new versions
+        packages_to_try = [
+            ('punkt_tab', 'tokenizers/punkt_tab'),
+            ('punkt', 'tokenizers/punkt'),
+            ('stopwords', 'corpora/stopwords'),
+            ('wordnet', 'corpora/wordnet')
+        ]
 
-        for package in packages:
+        for package_name, data_path in packages_to_try:
             try:
-                if package == 'punkt_tab':
-                    nltk.data.find('tokenizers/punkt_tab')
-                elif package == 'stopwords':
-                    nltk.data.find('corpora/stopwords')
-                elif package == 'wordnet':
-                    nltk.data.find('corpora/wordnet')
+                nltk.data.find(data_path)
+                print(f"✓ NLTK {package_name} already available")
             except LookupError:
                 try:
-                    nltk.download(package, quiet=True)
+                    print(f"Downloading NLTK {package_name}...")
+                    nltk.download(package_name, download_dir=nltk_data_dir, quiet=True)
+                    print(f"✓ NLTK {package_name} downloaded successfully")
                 except Exception as e:
-                    st.warning(f"Could not download NLTK {package}: {e}")
+                    print(f"⚠️ Failed to download NLTK {package_name}: {e}")
                     continue
     except Exception as e:
-        st.warning(f"NLTK setup failed: {e}")
+        print(f"NLTK setup failed: {e}")
 
 # Initialize NLTK data on app startup
+print("Setting up NLTK data...")
 ensure_nltk_data()
+print("NLTK setup complete!")
 
 # Configure page
 st.set_page_config(

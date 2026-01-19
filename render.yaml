@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: resumeselector
+    runtime: python3
+    buildCommand: "pip install -r requirements.txt && python setup_nltk.py"
+    startCommand: "streamlit run app.py --server.port $PORT --server.headless true --server.address 0.0.0.0"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13

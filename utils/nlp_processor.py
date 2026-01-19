@@ -87,7 +87,7 @@ def clean_text(text: str) -> str:
 
 def tokenize_text(text: str) -> list:
     """
-    Tokenize text into words
+    Tokenize text into words with robust fallback
 
     Args:
         text (str): Input text
@@ -95,19 +95,39 @@ def tokenize_text(text: str) -> list:
     Returns:
         list: List of tokens
     """
+    if not text or not text.strip():
+        return []
+
+    # Method 1: Try NLTK punkt_tab (newer versions)
     try:
         tokens = word_tokenize(text)
         return tokens
-    except LookupError as e:
-        # If punkt tokenizer is not available, try alternative tokenization
-        st.warning(f"NLTK tokenizer not available: {str(e)}. Using fallback tokenization.")
-        # Simple fallback tokenization
-        import re
-        tokens = re.findall(r'\b\w+\b', text.lower())
+    except (LookupError, ImportError):
+        pass
+
+    # Method 2: Try NLTK punkt (older versions)
+    try:
+        import nltk.tokenize.punkt as punkt
+        tokens = word_tokenize(text)
         return tokens
-    except Exception as e:
-        st.warning(f"Tokenization failed: {str(e)}")
-        return text.split()
+    except (LookupError, ImportError):
+        pass
+
+    # Method 3: Regex-based fallback tokenization
+    try:
+        import re
+        # Split on whitespace and punctuation, keep only word characters
+        tokens = re.findall(r'\b\w+\b', text.lower())
+        # Filter out very short tokens and numbers only
+        tokens = [token for token in tokens if len(token) > 1 and not token.isdigit()]
+        return tokens
+    except Exception:
+        pass
+
+    # Method 4: Ultimate fallback - simple split
+    tokens = text.lower().split()
+    tokens = [token.strip('.,!?;:()[]{}') for token in tokens if token.strip('.,!?;:()[]{}')]
+    return tokens
 
 def remove_stopwords(tokens: list) -> list:
     """
