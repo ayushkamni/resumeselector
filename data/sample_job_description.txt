@@ -1,0 +1,45 @@
+Senior Python Developer
+
+Job Description:
+
+We are looking for a Senior Python Developer to join our dynamic team. The ideal candidate will have strong experience in Python development and a passion for creating scalable, efficient software solutions.
+
+Key Responsibilities:
+- Design, develop, and maintain Python-based applications
+- Collaborate with cross-functional teams to deliver high-quality software
+- Write clean, efficient, and well-documented code
+- Participate in code reviews and mentor junior developers
+- Optimize applications for maximum performance and scalability
+
+Required Skills:
+- Python (advanced level)
+- Django or Flask web frameworks
+- SQL databases (PostgreSQL, MySQL)
+- REST API development
+- Git version control
+- AWS or cloud platforms
+- Docker containerization
+- Unit testing and TDD
+- Agile development methodologies
+
+Preferred Qualifications:
+- Experience with machine learning libraries (scikit-learn, TensorFlow)
+- React or JavaScript frontend development
+- Microservices architecture
+- CI/CD pipelines
+- Linux system administration
+
+What We Offer:
+- Competitive salary and benefits
+- Remote work flexibility
+- Professional development opportunities
+- Collaborative work environment
+- Cutting-edge technology stack
+
+Requirements:
+- Bachelor's degree in Computer Science or related field
+- 5+ years of Python development experience
+- Strong problem-solving skills
+- Excellent communication and teamwork abilities
+- Experience with agile development practices
+
